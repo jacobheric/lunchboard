@@ -1,0 +1,36 @@
+<head>
+  <title>Lunchboard</title>
+</head>
+
+<body>
+  <div id="outer">
+    {{> lunchboard}}
+  </div>
+</body>
+
+<template name="lunchboard">
+  <div class="lunchboard">
+    {{#each venues}}
+      {{> venue}}
+    {{/each}}
+  </div>
+
+  {{#if selected_name}}
+  <div class="details">
+    <div class="name">{{selected_name}}</div>
+    <input type="button" class="inc" value="Click to Vote" />
+  </div>
+  {{/if}}
+
+  {{#unless selected_name}}
+  <div class="none">Click a venue to select and vote.</div>
+  {{/unless}}
+</template>
+
+<template name="venue">
+  <div class="venue {{selected}}">
+    <span class="name">{{name}}</span>
+    <span class="score">{{score}}</span>
+  </div>
+</template>
+
