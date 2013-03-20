@@ -1,0 +1,148 @@
+body {
+	font-family: 'Helvetica Neue', Helvetica, Arial, san-serif;
+	font-weight: 200;
+	padding: 0;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-o-user-select: none;
+	user-select: none;
+}
+
+.inc, .dec {
+	border: 1px solid #ccc;
+	border-radius: 5px;
+	background-color: white;
+	padding: 4px;
+	margin-bottom: 5px;
+	cursor: default;
+}
+
+.login {
+	margin-top: 50px;
+	border-style: dashed none none none;
+	border-color: #ccc;
+	border-width: 2px;
+}
+
+.lunchboard {
+	width: 50%;
+	margin: 0px auto;
+	border-style: none dashed dashed dashed;
+	border-color: #ccc;
+	border-width: 2px;
+	padding: 5px;
+}
+
+.venue {
+	padding: 5px;
+}
+
+.venue .name {
+	display: inline-block;
+	width: 300px;
+	font-size: 1.75em;
+}
+
+.venue .score {
+	display: inline-block;
+	width: 100px;
+	text-align: right;
+	font-size: 2em;
+	font-weight: bold;
+	color: #777;
+}
+
+.venue.selected {
+	background-color: yellow;
+}
+
+.venue.selected .score {
+	color: black;
+}
+
+.instruction {
+	width: 50%;
+	margin: 0px auto;
+	font-size: 1em;
+	color: #777;
+}
+
+.search {
+	width: 50%;
+	margin: 10px auto;
+	font-size: 1em;
+	color: #777;
+}
+
+.searchbox {
+	width: 150px;
+}
+
+.none {
+	color: #777;
+}
+
+
+
+#map_canvas {
+	display: inline-block;
+	width: 74%;
+	height: 440px;
+	border: 1px solid grey;
+}
+
+#listing {
+	display: inline-block;
+	width: 24%;
+	height: 440px;
+	cursor: pointer;
+	overflow-x: hidden;
+	border: 1px solid lightgrey;
+}
+
+#controls {
+	text-align: right;
+	padding-top: 2px;
+}
+
+.placeIcon {
+	width: 32px;
+	height: 37px;
+	margin: 4px;
+}
+.hotelIcon {
+	width: 24px;
+	height: 24px;
+}
+#resultsTable {
+	border-collapse: collapse;
+	width: 240px;
+}
+#rating {
+	font-size: 13px;
+	font-family: Arial Unicode MS;
+}
+#keywordsLabel {
+	text-align: right;
+	width: 70px;
+	font-size: 14px;
+	padding: 4px;
+	position: absolute;
+}
+.iw_table_row {
+	height: 18px;
+}
+.iw_attribute_name {
+	font-weight: bold;
+	text-align: right;
+}
+#iconCredit {
+	position: absolute;
+	top: 472px;
+	left: 0;
+	font-size: 11px;
+	text-align: right;
+	width: 640px;
+	font-style: italic;
+}

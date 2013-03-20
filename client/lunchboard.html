@@ -1,0 +1,58 @@
+<head>
+	<title>Lunchboard</title>
+	<script type="text/javascript" src="http://www.google.com/jsapi"></script>	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+</head>
+
+<body>
+	<div class="outer">
+		{{> lunchboard}}
+	</div>
+</body>
+
+<template name="lunchboard">	
+	<div class="login">
+	</div>
+	<div class="lunchboard">
+		{{#each venues}}
+		{{> venue}} 
+		{{/each}}
+	</div>
+
+	<!--<div class="instruction">Use arrows to up/down vote.</div>-->
+
+	<div class="search">
+		<div>
+			<label>Search:</label> 
+			<input type="text" class="searchbox" id="keyword">
+			<span id="rankByLabel">Rank by:</span> 
+			<select id="rankBy">
+				<option value="prominence">
+					Prominence
+				</option>
+				<option value="distance">
+					Distance
+				</option>
+			</select>		
+		</div>
+		<div>	
+			<div id="map_canvas"></div>
+			<div id="listing">
+				<table id="resultsTable">
+					<tbody id="results"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	
+</template>
+
+<template name="venue">
+	<div class="venue {{selected}}">
+		<span class="name">{{name}}</span>
+		<span class="score">{{score}}</span>
+		<a class="inc">&#x25B2;</a>
+		<a class="dec">&#x25BC;</a>
+	</div>
+</template>
+
