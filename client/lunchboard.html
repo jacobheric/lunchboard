@@ -1,6 +1,5 @@
 <head>
 	<title>Lunchboard</title>
-	<script type="text/javascript" src="http://www.google.com/jsapi"></script>	
 	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
 </head>
 
@@ -38,9 +37,7 @@
 		<div>	
 			<div id="map_canvas"></div>
 			<div id="listing">
-				<table id="resultsTable">
-					<tbody id="results"></tbody>
-				</table>
+				{{>searchResult}}
 			</div>
 		</div>
 	</div>
@@ -54,5 +51,18 @@
 		<a class="inc">&#x25B2;</a>
 		<a class="dec">&#x25BC;</a>
 	</div>
+</template>
+
+<template name="searchResult">
+    <table id="resultsTable">
+		<tbody id="results"></tbody>				
+			{{#each searchResults}}	
+				<tr class="results {{parityStyle}}">
+					<td><img class="placeIcon" src="{{icon}}"/></td>
+					<td><span>{{name}}</span></td>
+				</tr>	
+			{{/each}}					
+		</tbody>				
+    </table>	
 </template>
 

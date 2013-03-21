@@ -1,6 +1,10 @@
+//
+//Local collections
+searchResults = new Meteor.Collection();
+mapMarkers = new Meteor.Collection();
 
 Template.lunchboard.venues = function() {
-	return Venues.find({}, {
+	return Venues.find({},{
 		sort: {
 			score: -1,
 			name: 1
@@ -10,6 +14,10 @@ Template.lunchboard.venues = function() {
 
 Template.venue.selected = function() {
 	return Session.equals("selected_venue", this._id) ? "selected" : '';
+};
+
+Template.searchResult.searchResults = function() {
+	return searchResults.find({});
 };
 
 Template.lunchboard.events = {
@@ -122,12 +130,11 @@ function reallyDoSearch() {
 	var rankBy = document.getElementById('rankBy').value;
 
 	var search = {};
+	search.types = ['restaurant', 'cafe', 'bar', 'food'];	
 
 	if (keyword) {
 		search.keyword = keyword;
 	}
-
-	search.types = ['restaurant', 'cafe', 'bar', 'food'];
 
 	if (rankBy == 'distance' && (search.types || search.keyword)) {
 		search.rankBy = google.maps.places.RankBy.DISTANCE;
@@ -143,17 +150,25 @@ function reallyDoSearch() {
 
 	places.search(search, function(results, status) {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
+			searchResults.remove({});
 			for (var i = 0; i < results.length; i++) {
-				var icon = 'icons/number_' + (i + 1) + '.png';
-				markers.push(new google.maps.Marker({
+				var icon = 'icons/number_' + (i + 1) + '.png';				
+				results[i]["icon"] = icon;
+				results[i]["parityStyle"] = i % 2 == 0 ? "" : "parityOdd";
+				var marker = {};
+				marker = new google.maps.Marker({
 					position: results[i].geometry.location,
 					animation: google.maps.Animation.DROP,
 					icon: icon
-				}));
+				}); 
+				markers.push(marker);
+				mapMarkers.insert(marker);
+				//results[i]["mapMarker"] = marker;
 				google.maps.event.addListener(markers[i], 'click', getDetails(results[i], i));
 				window.setTimeout(dropMarker(i), i * 100);
-				addResult(results[i], i);
+				searchResults.insert(results[i]);				
 			}
+						
 		}
 	});
 }
