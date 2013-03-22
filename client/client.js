@@ -44,6 +44,20 @@ Template.lunchboard.events = {
 	}	
 };
 
+var popMapMarker = function (marker) {
+	google.maps.event.trigger(marker, 'click');
+};
+
+Template.searchResult.events = {
+	'click tr': function() {
+	    var marker1 = markers[this.index];
+	    var marker2 = mapMarkers.findOne({index: this.index});
+		google.maps.event.trigger(marker1, 'click');
+		popMapMarker(marker2);
+	}
+};
+
+
 Template.venue.events = {
 	'click': function() {
 		Session.set("selected_venue", this._id);
@@ -152,19 +166,19 @@ function reallyDoSearch() {
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 			searchResults.remove({});
 			for (var i = 0; i < results.length; i++) {
-				var icon = 'icons/number_' + (i + 1) + '.png';				
+				var icon = 'icons/number_' + (i + 1) + '.png';	
+				results[i]["index"] = i;			
 				results[i]["icon"] = icon;
 				results[i]["parityStyle"] = i % 2 == 0 ? "" : "parityOdd";
-				var marker = {};
-				marker = new google.maps.Marker({
+				var marker = new google.maps.Marker({
 					position: results[i].geometry.location,
 					animation: google.maps.Animation.DROP,
-					icon: icon
+					icon: icon, 
+					index: i
 				}); 
 				markers.push(marker);
 				mapMarkers.insert(marker);
-				//results[i]["mapMarker"] = marker;
-				google.maps.event.addListener(markers[i], 'click', getDetails(results[i], i));
+				google.maps.event.addListener(marker, 'click', getDetails(results[i], i));
 				window.setTimeout(dropMarker(i), i * 100);
 				searchResults.insert(results[i]);				
 			}
