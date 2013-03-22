@@ -69,7 +69,7 @@ Template.searchResult.events = {
 };
 
 Template.search.events = {
-	'keyup input.searchbox': function(event, template) {
+	'keyup input.searchBox': function(event, template) {
 		if (event.keyCode === 13){ 
 			var element = template.find(".searchBox");
 			element.blur();
@@ -84,23 +84,18 @@ Template.search.events = {
 Template.mapCanvas.rendered = function() {
 
 	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(
-			
-		function(position){
-
-			var cPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);	
-			var myOptions = {
-				zoom: 15,
-				center: cPos,
-				mapTypeId: google.maps.MapTypeId.ROADMAP
+		navigator.geolocation.getCurrentPosition(			
+			function(position){
+				var cPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);	
+				var myOptions = {
+					zoom: 15,
+					center: cPos,
+					mapTypeId: google.maps.MapTypeId.ROADMAP
+				}
+				map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+				places = new google.maps.places.PlacesService(map);
+				google.maps.event.addListener(map, 'tilesloaded', tilesLoaded);				
 			}
-
-			map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
-			places = new google.maps.places.PlacesService(map);
-			google.maps.event.addListener(map, 'tilesloaded', tilesLoaded);			
-			
-			
-		}	
 		);
 	} else {
 	  error('not supported');
@@ -112,7 +107,7 @@ var popMapMarker = function (marker) {
 	google.maps.event.trigger(marker, 'click');
 };
 
-function tilesLoaded() {
+var tilesLoaded = function tilesLoaded() {
 	search();
 	google.maps.event.clearListeners(map, 'tilesloaded');
 	google.maps.event.addListener(map, 'zoom_changed', searchIfRankByProminence);
