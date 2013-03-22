@@ -1,7 +1,24 @@
 //
 //Local collections
 searchResults = new Meteor.Collection();
-mapMarkers = new Meteor.Collection();
+// TODO: Map markers in meteor collection aren't working properly; revisit
+//mapMarkers = new Meteor.Collection();
+
+//
+//Pure clientside code; does non-reactive restaurant search
+var map, places, iw;
+var markers = [];
+var searchTimeout;
+var centerMarker;
+var hostnameRegexp = new RegExp('^https?://.+?/');
+var curPos;
+
+Meteor.startup(function () {
+  Deps.autorun(function () {
+		//initialize();
+  });
+});
+
 
 Template.lunchboard.venues = function() {
 	return Venues.find({},{
@@ -16,11 +33,10 @@ Template.venue.selected = function() {
 	return Session.equals("selected_venue", this._id) ? "selected" : '';
 };
 
-Template.searchResult.searchResults = function() {
-	return searchResults.find({});
-};
-
-Template.lunchboard.events = {
+Template.venue.events = {
+	'click': function() {
+		Session.set("selected_venue", this._id);
+	},
 	'click a.inc': function() {
 		Venues.update(Session.get("selected_venue"), {
 			$inc: {
@@ -34,87 +50,67 @@ Template.lunchboard.events = {
 				score: -1
 			}
 		});
-	},
-	'click a.dec': function() {
-		Venues.update(Session.get("selected_venue"), {
-			$inc: {
-				score: -1
-			}
-		});
 	}	
 };
 
-var popMapMarker = function (marker) {
-	google.maps.event.trigger(marker, 'click');
+Template.searchResult.searchResults = function() {
+	return searchResults.find({});
 };
 
 Template.searchResult.events = {
 	'click tr': function() {
-	    var marker1 = markers[this.index];
-	    var marker2 = mapMarkers.findOne({index: this.index});
-		google.maps.event.trigger(marker1, 'click');
-		popMapMarker(marker2);
+	    var marker = markers[this.index];
+		//Not working
+	    //var marker2 = mapMarkers.findOne({index: this.index});
+		if (marker){
+			popMapMarker(marker);
+		}
 	}
 };
 
-
-Template.venue.events = {
-	'click': function() {
-		Session.set("selected_venue", this._id);
-	}
+Template.search.events = {
+	'keyup input.searchbox': function(event, template) {
+		if (event.keyCode === 13){ 
+			var element = template.find(".searchBox");
+			element.blur();
+			search(element.value);
+		}
+	},
+	'change select.searchRank': function() {
+		search();
+	}	
 };
 
-Meteor.startup(function () {
-  Deps.autorun(function () {
-		initialize();
-  });
-});
+Template.mapCanvas.rendered = function() {
 
-
-//
-//Pure clientside code; does non-reactive restaurant search
-var map, places, iw;
-var markers = [];
-var searchTimeout;
-var centerMarker;
-var autocomplete;
-var hostnameRegexp = new RegExp('^https?://.+?/');
-
-function initialize() {
-	
 	if (navigator.geolocation) {
-		navigator.geolocation.getCurrentPosition(setupPage);
+		navigator.geolocation.getCurrentPosition(
+			
+		function(position){
+
+			var cPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);	
+			var myOptions = {
+				zoom: 15,
+				center: cPos,
+				mapTypeId: google.maps.MapTypeId.ROADMAP
+			}
+
+			map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+			places = new google.maps.places.PlacesService(map);
+			google.maps.event.addListener(map, 'tilesloaded', tilesLoaded);			
+			
+			
+		}	
+		);
 	} else {
 	  error('not supported');
-	}			
+	}	
 }
 
-function setupPage(position){
-	
-	var curPos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-	var myOptions = {
-		zoom: 15,
-		center: curPos,
-		mapTypeId: google.maps.MapTypeId.ROADMAP
-	}
-	map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
-	places = new google.maps.places.PlacesService(map);
-	google.maps.event.addListener(map, 'tilesloaded', tilesLoaded);
-
-	document.getElementById('keyword').onkeyup = function(e) {
-		if (!e) var e = window.event;
-		if (e.keyCode != 13) return;
-		document.getElementById('keyword').blur();
-		search(document.getElementById('keyword').value);
-	}
-
-	var rankBySelect = document.getElementById('rankBy');
-	rankBySelect.onchange = function() {
-		search();
-	};			
-	
-}
+var popMapMarker = function (marker) {
+	google.maps.event.trigger(marker, 'click');
+};
 
 function tilesLoaded() {
 	search();
@@ -130,7 +126,6 @@ function searchIfRankByProminence() {
 }
 
 function search() {
-	clearResults();
 	clearMarkers();
 
 	if (searchTimeout) {
@@ -177,7 +172,9 @@ function reallyDoSearch() {
 					index: i
 				}); 
 				markers.push(marker);
-				mapMarkers.insert(marker);
+				//
+				//Not currently working
+				//mapMarkers.insert(marker);
 				google.maps.event.addListener(marker, 'click', getDetails(results[i], i));
 				window.setTimeout(dropMarker(i), i * 100);
 				searchResults.insert(results[i]);				
@@ -205,34 +202,6 @@ function dropMarker(i) {
 	}
 }
 
-function addResult(result, i) {
-	var results = document.getElementById('results');
-	var tr = document.createElement('tr');
-	tr.style.backgroundColor = (i % 2 == 0 ? '#F0F0F0' : '#FFFFFF');
-	tr.onclick = function() {
-		google.maps.event.trigger(markers[i], 'click');
-	};
-
-	var iconTd = document.createElement('td');
-	var nameTd = document.createElement('td');
-	var icon = document.createElement('img');
-	icon.src = 'icons/number_' + (i + 1) + '.png';
-	icon.setAttribute('class', 'placeIcon');
-	icon.setAttribute('className', 'placeIcon');
-	var name = document.createTextNode(result.name);
-	iconTd.appendChild(icon);
-	nameTd.appendChild(name);
-	tr.appendChild(iconTd);
-	tr.appendChild(nameTd);
-	results.appendChild(tr);
-}
-
-function clearResults() {
-	var results = document.getElementById('results');
-	while (results.childNodes[0]) {
-		results.removeChild(results.childNodes[0]);
-	}
-}
 
 function getDetails(result, i) {
 	return function() {

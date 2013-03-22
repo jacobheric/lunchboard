@@ -9,6 +9,18 @@ body {
 	user-select: none;
 }
 
+a {
+	color: inherit;
+	text-decoration: none;
+	border-style: none none dashed none;
+	border-width: 1px;
+	border-color: #333;
+}
+
+a :hover {
+	color: #000
+}
+
 .inc, .dec {
 	border: 1px solid #ccc;
 	border-radius: 5px;
@@ -91,7 +103,7 @@ body {
 	border: 1px solid grey;
 }
 
-#listing {
+.listing {
 	display: inline-block;
 	width: 24%;
 	height: 440px;

@@ -19,29 +19,7 @@
 	</div>
 
 	<!--<div class="instruction">Use arrows to up/down vote.</div>-->
-
-	<div class="search">
-		<div>
-			<label>Search:</label> 
-			<input type="text" class="searchbox" id="keyword">
-			<span id="rankByLabel">Rank by:</span> 
-			<select id="rankBy">
-				<option value="prominence">
-					Prominence
-				</option>
-				<option value="distance">
-					Distance
-				</option>
-			</select>		
-		</div>
-		<div>	
-			<div id="map_canvas"></div>
-			<div id="listing">
-				{{>searchResult}}
-			</div>
-		</div>
-	</div>
-	
+	{{> search}}
 </template>
 
 <template name="venue">
@@ -53,9 +31,33 @@
 	</div>
 </template>
 
+<template name="search">
+	<div class="search">
+		<div>
+			<label>Search:</label> 
+			<input type="text" class="searchBox" id="keyword">
+			<span>Rank by:</span> 
+			<select class="searchRank" id="rankBy">
+				<option value="prominence">
+					Prominence
+				</option>
+				<option value="distance">
+					Distance
+				</option>
+			</select>		
+		</div>
+		<div>	
+			{{>mapCanvas}}			
+			<div class="listing">
+				{{>searchResult}}
+			</div>
+		</div>
+	</div>	
+</template>
+
 <template name="searchResult">
-    <table id="resultsTable">
-		<tbody id="results"></tbody>				
+    <table>
+		<tbody>
 			{{#each searchResults}}	
 				<tr class="results {{parityStyle}}">
 					<td><img class="placeIcon" src="{{icon}}"/></td>
@@ -64,5 +66,10 @@
 			{{/each}}					
 		</tbody>				
     </table>	
+</template>
+
+<template name="mapCanvas">
+	<!-- External Google Maps Widget -->
+	<div id="map_canvas" class="mapCanvas"/>	
 </template>
 
