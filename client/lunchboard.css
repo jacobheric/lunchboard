@@ -7,6 +7,9 @@ body {
 	-moz-user-select: none;
 	-o-user-select: none;
 	user-select: none;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;	
 }
 
 a {
@@ -30,11 +33,13 @@ a :hover {
 	cursor: default;
 }
 
-.login {
-	margin-top: 50px;
-	border-style: dashed none none none;
+.header {
+	width: 50%;
+	margin: 2px auto;
+	border-style: dashed dashed dashed dashed;
 	border-color: #ccc;
 	border-width: 2px;
+	padding: 5px
 }
 
 .lunchboard {
@@ -73,6 +78,26 @@ a :hover {
 	color: black;
 }
 
+.date {
+	display: inline-block;
+	border-style: none dashed none none;
+	border-color: #ccc;
+	border-width: 2px;
+	padding-right: 5px;
+	width: 50%;
+}
+
+.vote {
+	display: inline-block;
+	font-size: 1em;
+	font-weight: bold;	
+}
+
+.title {
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
 .instruction {
 	width: 50%;
 	margin: 0px auto;
@@ -82,9 +107,21 @@ a :hover {
 
 .search {
 	width: 50%;
-	margin: 10px auto;
-	font-size: 1em;
+	margin: 0px auto;
+	border-style: none dashed dashed dashed;
+	border-color: #ccc;
+	border-width: 2px;
+	padding: 5px
+}
+
+.searchResults {
+	width: 50%;
 	color: #777;
+	margin: 0px auto;
+	border-style: none dashed dashed dashed;
+	border-color: #ccc;
+	border-width: 2px;
+	padding: 5px;	
 }
 
 .searchbox {
@@ -95,26 +132,18 @@ a :hover {
 	color: #777;
 }
 
-
 #map_canvas {
-	display: inline-block;
-	width: 74%;
-	height: 440px;
-	border: 1px solid grey;
+	float: left;
+	width: 75%;
+	margin: 0px auto;	
+	height: 440px;		
 }
 
 .listing {
-	display: inline-block;
-	width: 24%;
-	height: 440px;
+	width: 25%;
+	height: 440px;	
 	cursor: pointer;
 	overflow-x: hidden;
-	border: 1px solid lightgrey;
-}
-
-#controls {
-	text-align: right;
-	padding-top: 2px;
 }
 
 .placeIcon {
@@ -129,7 +158,6 @@ a :hover {
 
 #rating {
 	font-size: 13px;
-	font-family: Arial Unicode MS;
 }
 #keywordsLabel {
 	text-align: right;

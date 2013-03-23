@@ -1,6 +1,6 @@
 //
 //Local collections
-searchResults = new Meteor.Collection();
+searchResults = new Meteor.Collection(null);
 // TODO: Map markers in meteor collection aren't working properly; revisit
 //mapMarkers = new Meteor.Collection();
 
@@ -36,7 +36,10 @@ Template.venue.selected = function() {
 Template.venue.events = {
 	'click': function() {
 		Session.set("selected_venue", this._id);
-	},
+	}
+};
+
+Template.header.events = {
 	'click a.inc': function() {
 		Venues.update(Session.get("selected_venue"), {
 			$inc: {
@@ -45,11 +48,15 @@ Template.venue.events = {
 		});
 	},
 	'click a.dec': function() {
-		Venues.update(Session.get("selected_venue"), {
-			$inc: {
-				score: -1
-			}
-		});
+		var v = Venues.findOne(Session.get("selected_venue")); 
+		if (v && v.score > 0){
+			Venues.update(Session.get("selected_venue"), {
+				$inc: {
+					score: -1
+				}
+			});
+		}
+
 	}	
 };
 
@@ -98,7 +105,7 @@ Template.mapCanvas.rendered = function() {
 			}
 		);
 	} else {
-	  error('not supported');
+	  error('geolocation not supported');
 	}	
 }
 
@@ -106,6 +113,7 @@ Template.mapCanvas.rendered = function() {
 var popMapMarker = function (marker) {
 	google.maps.event.trigger(marker, 'click');
 };
+
 
 var tilesLoaded = function tilesLoaded() {
 	search();
@@ -132,6 +140,7 @@ function search() {
 function reallyDoSearch() {
 	var keyword = document.getElementById('keyword').value;
 	var rankBy = document.getElementById('rankBy').value;
+	var addVenues = Venues.find().count() === 0;
 
 	var search = {};
 	search.types = ['restaurant', 'cafe', 'bar', 'food'];	
@@ -153,13 +162,21 @@ function reallyDoSearch() {
 	}
 
 	places.search(search, function(results, status) {
+		searchResults.remove({});		
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
-			searchResults.remove({});
 			for (var i = 0; i < results.length; i++) {
 				var icon = 'icons/number_' + (i + 1) + '.png';	
 				results[i]["index"] = i;			
 				results[i]["icon"] = icon;
 				results[i]["parityStyle"] = i % 2 == 0 ? "" : "parityOdd";
+				
+				if (addVenues && i < 5){
+					Venues.insert({
+							name: results[i].name,
+							score: 0
+						});
+				}
+				
 				var marker = new google.maps.Marker({
 					position: results[i].geometry.location,
 					animation: google.maps.Animation.DROP,
@@ -174,6 +191,9 @@ function reallyDoSearch() {
 				window.setTimeout(dropMarker(i), i * 100);
 				searchResults.insert(results[i]);				
 			}
+			
+			//
+			//Pre-populate some venues if there are none
 						
 		}
 	});
@@ -212,7 +232,7 @@ function showInfoWindow(i) {
 			iw.close();
 			iw = null;
 		}
-
+		
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 			iw = new google.maps.InfoWindow({
 				content: getIWContent(place)

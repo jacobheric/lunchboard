@@ -10,8 +10,7 @@
 </body>
 
 <template name="lunchboard">	
-	<div class="login">
-	</div>
+	{{> header}}
 	<div class="lunchboard">
 		{{#each venues}}
 		{{> venue}} 
@@ -22,37 +21,50 @@
 	{{> search}}
 </template>
 
+<template name="header">
+	<div class="header">
+		<div class="date">
+			<span class="title">Lunch for </span>
+			<select class="title">
+				<option value="today">Today</option>
+				<option value="tomorrow">Tomorrow</option>
+			</select>
+		</div>
+		<div class="vote">	
+			<span>Select/Vote<span>	
+			<a class="inc">&#x25B2;</a>
+			<a class="dec">&#x25BC;</a>	
+		</div>
+	</div>	
+</template>
+
 <template name="venue">
 	<div class="venue {{selected}}">
 		<span class="name">{{name}}</span>
 		<span class="score">{{score}}</span>
-		<a class="inc">&#x25B2;</a>
-		<a class="dec">&#x25BC;</a>
 	</div>
 </template>
 
 <template name="search">
 	<div class="search">
-		<div>
-			<label>Search:</label> 
-			<input type="text" class="searchBox" id="keyword">
-			<span>Rank by:</span> 
-			<select class="searchRank" id="rankBy">
-				<option value="prominence">
-					Prominence
-				</option>
-				<option value="distance">
-					Distance
-				</option>
-			</select>		
+		<label>Search:</label> 
+		<input type="text" class="searchBox" id="keyword">
+		<span>Rank by:</span> 
+		<select class="searchRank" id="rankBy">
+			<option value="prominence">
+				Prominence
+			</option>
+			<option value="distance">
+				Distance
+			</option>
+		</select>		
+	</div>			
+	<div class="searchResults">	
+		{{>mapCanvas}}			
+		<div class="listing">
+			{{>searchResult}}
 		</div>
-		<div>	
-			{{>mapCanvas}}			
-			<div class="listing">
-				{{>searchResult}}
-			</div>
-		</div>
-	</div>	
+	</div>
 </template>
 
 <template name="searchResult">
