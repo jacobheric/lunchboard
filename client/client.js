@@ -68,14 +68,24 @@ Template.searchResult.searchResults = function() {
 };
 
 Template.searchResult.events = {
-	'click tr': function() {
+	'click td.info': function() {
 	    var marker = markers[this.index];
 		//Not working
 	    //var marker2 = mapMarkers.findOne({index: this.index});
 		if (marker){
 			popMapMarker(marker);
 		}
-	}
+	},
+	'click td.add': function(event, template) {
+	 	v = Venues.findOne({name: this.name});
+		if (!v){
+			Venues.insert({
+					name: this.name,
+					score: 0
+				});
+		}		
+
+	}	
 };
 
 Template.search.events = {
@@ -275,7 +285,9 @@ function getIWContent(place) {
 		}
 		content += '<tr class="iw_table_row"><td class="iw_attribute_name">Website:</td><td><a href="' + fullUrl + '">' + website + '</a></td></tr>';
 	}
+	
 	content += '</table>';
+	
 	return content;
 }
 

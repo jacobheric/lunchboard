@@ -74,9 +74,10 @@
     <table>
 		<tbody>
 			{{#each searchResults}}	
-				<tr class="results {{parityStyle}}">				
-					<td><img class="placeIcon" src="{{icon}}"/></td>
-					<td><span>{{name}}</span></td>
+				<tr class="results {{parityStyle}}">
+					<td class="add" title="Add {{name}} to Board"> <span>+</span> </td>				
+					<td class="info" title="Click for more info"><img class="placeIcon" src="{{icon}}"/></td>
+					<td class="info" title="Click for more info"><span>{{name}}</span></td>
 				</tr>	
 			{{/each}}					
 		</tbody>				

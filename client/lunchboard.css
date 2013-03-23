@@ -20,8 +20,14 @@ a {
 	border-color: #333;
 }
 
-a :hover {
+a:hover {
 	color: #000
+}
+
+.add {
+	font-size: 1.3em;
+	color: inherit;
+	text-decoration: none;
 }
 
 .inc, .dec {
