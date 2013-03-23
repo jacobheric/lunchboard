@@ -146,7 +146,7 @@ a:hover {
 	color: #777;
 }
 
-#map_canvas {
+.mapCanvas {
 	float: left;
 	width: 75%;
 	margin: 0px auto;	

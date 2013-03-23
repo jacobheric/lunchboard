@@ -103,6 +103,8 @@ Template.search.events = {
 
 Template.mapCanvas.rendered = function() {
 
+	var t = this;
+	
 	if (navigator.geolocation) {
 		navigator.geolocation.getCurrentPosition(			
 			function(position){
@@ -112,7 +114,7 @@ Template.mapCanvas.rendered = function() {
 					center: cPos,
 					mapTypeId: google.maps.MapTypeId.ROADMAP
 				}
-				map = new google.maps.Map(document.getElementById('map_canvas'), myOptions);
+				map = new google.maps.Map(t.find(".mapCanvas"), myOptions);
 				places = new google.maps.places.PlacesService(map);
 				google.maps.event.addListener(map, 'tilesloaded', tilesLoaded);				
 			}
