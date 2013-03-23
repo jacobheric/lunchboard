@@ -36,6 +36,9 @@ Template.venue.selected = function() {
 Template.venue.events = {
 	'click': function() {
 		Session.set("selected_venue", this._id);
+	},
+	'click img': function() {
+		Venues.remove(this._id);
 	}
 };
 

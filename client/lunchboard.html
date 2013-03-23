@@ -40,6 +40,9 @@
 
 <template name="venue">
 	<div class="venue {{selected}}">
+		<div class="delete">		
+			<img src="/icons/delete.png">
+		</div>
 		<span class="name">{{name}}</span>
 		<span class="score">{{score}}</span>
 	</div>
@@ -71,7 +74,7 @@
     <table>
 		<tbody>
 			{{#each searchResults}}	
-				<tr class="results {{parityStyle}}">
+				<tr class="results {{parityStyle}}">				
 					<td><img class="placeIcon" src="{{icon}}"/></td>
 					<td><span>{{name}}</span></td>
 				</tr>	

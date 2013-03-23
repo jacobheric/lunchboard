@@ -87,6 +87,14 @@ a :hover {
 	width: 50%;
 }
 
+.delete {
+	display: inline-block;
+	border-style: none dashed none none;
+	border-color: #ccc;
+	border-width: 2px;
+	padding-right: 5px;
+}
+
 .vote {
 	display: inline-block;
 	font-size: 1em;
