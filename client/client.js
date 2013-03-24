@@ -180,7 +180,7 @@ function reallyDoSearch() {
 		searchResults.remove({});		
 		if (status == google.maps.places.PlacesServiceStatus.OK) {
 			for (var i = 0; i < results.length; i++) {
-				var icon = 'icons/number_' + (i + 1) + '.png';	
+				var icon = 'icons/mapmark_' + (i + 1) + '.png';	
 				results[i]["index"] = i;			
 				results[i]["icon"] = icon;
 				results[i]["parityStyle"] = i % 2 == 0 ? "" : "parityOdd";
