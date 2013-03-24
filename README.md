@@ -9,3 +9,5 @@ The map/places widget is unique per client.  The restaurant vote/roster board is
 
 The app was really created to exercise meteor.  At this point it's basic.
 
+The app is running at http://lunchboard.meteor.com/.
+
