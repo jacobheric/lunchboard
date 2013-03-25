@@ -170,29 +170,11 @@ a:hover {
 	background-color: #F0F0F0;
 }
 
-#rating {
-	font-size: 13px;
+.rating {
+	font-size: 1em;
 }
-#keywordsLabel {
-	text-align: right;
-	width: 70px;
-	font-size: 14px;
-	padding: 4px;
-	position: absolute;
-}
-.iw_table_row {
-	height: 18px;
-}
-.iw_attribute_name {
+
+.infoWindowLabel {
 	font-weight: bold;
 	text-align: right;
-}
-#iconCredit {
-	position: absolute;
-	top: 472px;
-	left: 0;
-	font-size: 11px;
-	text-align: right;
-	width: 640px;
-	font-style: italic;
 }

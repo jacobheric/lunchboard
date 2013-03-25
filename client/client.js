@@ -10,7 +10,6 @@ var map, places, iw;
 var markers = [];
 var searchTimeout;
 var centerMarker;
-var hostnameRegexp = new RegExp('^https?://.+?/');
 var curPos;
 
 Meteor.startup(function () {
@@ -115,7 +114,7 @@ Template.mapCanvas.rendered = function() {
 					mapTypeId: google.maps.MapTypeId.ROADMAP
 				}
 				map = new google.maps.Map(t.find(".mapCanvas"), myOptions);
-				places = new google.maps.places.PlacesService(map);
+				places = new google.maps.places.PlacesService(map);		
 				google.maps.event.addListener(map, 'tilesloaded', tilesLoaded);				
 			}
 		);
@@ -138,7 +137,7 @@ var tilesLoaded = function tilesLoaded() {
 }
 
 function searchIfRankByProminence() {
-	if (document.getElementById('rankBy').value == 'prominence') {
+	if (document.getElementById('searchRank').value == 'prominence') {
 		search();
 	}
 }
@@ -149,12 +148,12 @@ function search() {
 	if (searchTimeout) {
 		window.clearTimeout(searchTimeout);
 	}
-	searchTimeout = window.setTimeout(reallyDoSearch, 500);
+	searchTimeout = window.setTimeout(doSearch, 500);
 }
 
-function reallyDoSearch() {
-	var keyword = document.getElementById('keyword').value;
-	var rankBy = document.getElementById('rankBy').value;
+function doSearch() {
+	var keyword = document.getElementById('searchBox').value;
+	var rankBy = document.getElementById('searchRank').value;
 	var addVenues = Venues.find().count() === 0;
 
 	var search = {};
@@ -205,11 +204,7 @@ function reallyDoSearch() {
 				google.maps.event.addListener(marker, 'click', getDetails(results[i], i));
 				window.setTimeout(dropMarker(i), i * 100);
 				searchResults.insert(results[i]);				
-			}
-			
-			//
-			//Pre-populate some venues if there are none
-						
+			}						
 		}
 	});
 }
@@ -241,34 +236,10 @@ function getDetails(result, i) {
 	}
 }
 
-function showInfoWindow(i) {
-	return function(place, status) {
-		if (iw) {
-			iw.close();
-			iw = null;
-		}
-		
-		if (status == google.maps.places.PlacesServiceStatus.OK) {
-			iw = new google.maps.InfoWindow({
-				content: getIWContent(place)
-			});
-			iw.open(map, markers[i]);
-		}
-	}
-}
-
-function getIWContent(place) {
-	var content = '';
-	content += '<table>';
-	content += '<tr class="iw_table_row">';
-	content += '<td style="text-align: right"><img src="' + place.icon + '"/></td>';
-	content += '<td><b><a href="' + place.url + '">' + place.name + '</a></b></td></tr>';
-	content += '<tr class="iw_table_row"><td class="iw_attribute_name">Address:</td><td>' + place.vicinity + '</td></tr>';
-	if (place.formatted_phone_number) {
-		content += '<tr class="iw_table_row"><td class="iw_attribute_name">Telephone:</td><td>' + place.formatted_phone_number + '</td></tr>';
-	}
+var ratingHtml = function getRatingHtml(place){
+	var ratingHtml = '';	
+	
 	if (place.rating) {
-		var ratingHtml = '';
 		for (var i = 0; i < 5; i++) {
 			if (place.rating < (i + 0.5)) {
 				ratingHtml += '&#10025;';
@@ -276,20 +247,25 @@ function getIWContent(place) {
 				ratingHtml += '&#10029;';
 			}
 		}
-		content += '<tr class="iw_table_row"><td class="iw_attribute_name">Rating:</td><td><span id="rating">' + ratingHtml + '</span></td></tr>';
 	}
-	if (place.website) {
-		var fullUrl = place.website;
-		var website = hostnameRegexp.exec(place.website);
-		if (website == null) {
-			website = 'http://' + place.website + '/';
-			fullUrl = website;
-		}
-		content += '<tr class="iw_table_row"><td class="iw_attribute_name">Website:</td><td><a href="' + fullUrl + '">' + website + '</a></td></tr>';
-	}
-	
-	content += '</table>';
-	
-	return content;
+	return ratingHtml;
 }
 
+function showInfoWindow(i) {
+	return function(place, status) {
+		
+		if (iw) {
+			iw.close();
+			iw = null;
+		}		
+		
+		if (status == google.maps.places.PlacesServiceStatus.OK) {;
+			place['ratingHtml'] = ratingHtml(place);
+			iw = new google.maps.InfoWindow({
+				content: Template.infoWindow(place)
+			});
+			iw.open(map, markers[i]);
+		}
+		
+	}
+}

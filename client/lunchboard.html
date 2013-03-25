@@ -51,9 +51,9 @@
 <template name="search">
 	<div class="search">
 		<label>Search:</label> 
-		<input type="text" class="searchBox" id="keyword">
+		<input type="text" class="searchBox" id="searchBox">
 		<span>Rank by:</span> 
-		<select class="searchRank" id="rankBy">
+		<select class="searchRank" id="searchRank">
 			<option value="prominence">
 				Prominence
 			</option>
@@ -87,5 +87,36 @@
 <template name="mapCanvas">
 	<!-- External Google Maps Widget -->
 	<div id="map_canvas" class="mapCanvas"/>	
+</template>
+
+<template name="infoWindow">
+	<table>
+		<tr class="infoWindowRow">
+			<td class="infoWindowLabel"><img width="32" height="32" src="{{icon}}"/></td>
+			<td><a href="{{url}}">{{name}}</a></td>
+		</tr>
+		<tr class="infoWindowRow">
+			<td class="infoWindowLabel">Address:</td>
+			<td>{{vicinity}}</td>
+		</tr>	
+        {{#if formatted_phone_number}}		
+			<tr class="infoWindowRow">
+				<td class="infoWindowLabel">Telephone:</td>
+				<td>{{formatted_phone_number}}</td>
+			</tr>
+		{{/if}}
+        {{#if ratingHtml}}		
+		<tr class="infoWindowRow">
+			<td class="infoWindowLabel">Rating:</td>
+			<td><span class="rating">{{{ratingHtml}}}</span></td>
+		</tr>
+		{{/if}}
+		{{#if website}}
+		<tr class="infoWindowRow">
+			<td class="infoWindowLabel">Website:</td>
+			<td><a href="{{website}}">{{website}}</a></td>
+		</tr>	
+		{{/if}}	
+	</table>	
 </template>
 
