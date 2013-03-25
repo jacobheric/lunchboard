@@ -1,4 +1,8 @@
 //
+//Subscriptions
+Meteor.subscribe("venues");
+
+//
 //Local collections
 searchResults = new Meteor.Collection(null);
 // TODO: Map markers in meteor collection aren't working properly; revisit
@@ -37,28 +41,16 @@ Template.venue.events = {
 		Session.set("selected_venue", this._id);
 	},
 	'click img': function() {
-		Venues.remove(this._id);
+		Meteor.call('removeVenue', this._id);
 	}
 };
 
 Template.header.events = {
 	'click a.inc': function() {
-		Venues.update(Session.get("selected_venue"), {
-			$inc: {
-				score: 1
-			}
-		});
+		Meteor.call('incrementVenue', Session.get("selected_venue"));
 	},
 	'click a.dec': function() {
-		var v = Venues.findOne(Session.get("selected_venue")); 
-		if (v && v.score > 0){
-			Venues.update(Session.get("selected_venue"), {
-				$inc: {
-					score: -1
-				}
-			});
-		}
-
+		Meteor.call('decrementVenue', Session.get("selected_venue"));
 	}	
 };
 
@@ -78,10 +70,11 @@ Template.searchResult.events = {
 	'click td.add': function(event, template) {
 	 	v = Venues.findOne({name: this.name});
 		if (!v){
-			Venues.insert({
-					name: this.name,
-					score: 0
-				});
+			Meteor.call('createVenue', 
+			{
+				name: this.name,
+				score: 0
+			});			
 		}		
 
 	}	
