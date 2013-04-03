@@ -22,7 +22,6 @@ Meteor.startup(function () {
   });
 });
 
-
 Template.lunchboard.venues = function() {
 	return Venues.find({},{
 		sort: {

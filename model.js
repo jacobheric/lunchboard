@@ -2,16 +2,17 @@
 	Venues currently only consist of name & score
 */
 Venues = new Meteor.Collection("venues");
+Events = new Meteor.Collection("events");
 
 Venues.allow({
   insert: function () {
-    return false; // use createVenue function only
+    return true; // use createVenue function only
   },
   update: function () {
-    return false;
+    return true;
   },
   remove: function () {
-	return false;
+	return true;
   }
 });
 
