@@ -1,7 +1,7 @@
 // 
 //All events
 Meteor.publish('events', function () {
-  return Lists.find();
+  return Events.find();
 });
 
 // 

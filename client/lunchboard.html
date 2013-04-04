@@ -10,6 +10,9 @@
 </body>
 
 <template name="lunchboard">	
+	{{#if loading}}
+		<div></div>
+	{{/if}}	
 	{{> header}}
 	<div class="lunchboard">
 		{{#each venues}}
@@ -44,7 +47,7 @@
 <template name="venue">
 	<div class="venue {{selected}}">
 		<div class="delete">		
-			<img src="/icons/delete.png">
+			<a title="Delete">&#8855;</a>
 		</div>
 		<span class="name">{{name}}</span>
 		<span class="score">{{score}}</span>

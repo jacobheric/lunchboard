@@ -51,20 +51,27 @@ a:hover {
 .lunchboard {
 	width: 50%;
 	margin: 0px auto;
-	border-style: none dashed dashed dashed;
+	border-style: none dashed none dashed;
 	border-color: #ccc;
 	border-width: 2px;
-	padding: 5px;
+	padding: 0 5px 5px 5px;
 }
 
 .venue {
-	padding: 5px;
+	border-style: none none dashed none;
+	border-color: #ccc;
+	border-width: 2px;
+	cursor: default;
 }
 
 .venue .name {
 	display: inline-block;
 	width: 300px;
 	font-size: 1.75em;
+	border-style: none none none dashed;
+	border-color: #ccc;
+	border-width: 2px;	
+	padding-left: 5px;
 }
 
 .venue .score {
@@ -95,10 +102,13 @@ a:hover {
 
 .delete {
 	display: inline-block;
-	border-style: none dashed none none;
-	border-color: #ccc;
-	border-width: 2px;
-	padding-right: 5px;
+	font-size: 2.5em;
+}
+
+.delete a {
+	color: inherit;
+	text-decoration: none;
+	border-style: none;
 }
 
 .vote {

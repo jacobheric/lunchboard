@@ -1,8 +1,17 @@
 //
 //Local collections
-searchResults = new Meteor.Collection(null);
+var searchResults = new Meteor.Collection(null);
 // TODO: Map markers in meteor collection aren't working properly; revisit
 //mapMarkers = new Meteor.Collection();
+
+var	venuesHandle = null;
+//
+//Pure clientside code; does non-reactive restaurant search
+var map, places, iw;
+var markers = [];
+var searchTimeout;
+var centerMarker;
+var curPos;
 
 //
 //Subscriptions
@@ -17,35 +26,30 @@ var eventsHandle = Meteor.subscribe('events', function () {
 	else {
 		var id = Events.insert({});
 		Session.set('eventId', id);
-		Router.setList(id);
+		Router.setEvent(id);
 	}
 });
 
 Deps.autorun(function () {
-	
-	var	thingsHandle = null;
-	
 	if (Session.get('eventId')) {
 		venuesHandle = Meteor.subscribe('venues', Session.get('eventId'));
 	}
 });
 
-//
-//Pure clientside code; does non-reactive restaurant search
-var map, places, iw;
-var markers = [];
-var searchTimeout;
-var centerMarker;
-var curPos;
+Template.lunchboard.loading = function () {
+	return !eventsHandle.ready();
+};
+
 
 Template.lunchboard.venues = function() {
-	// return Venues.find({},{
-	// 	sort: {
-	// 		score: -1,
-	// 		name: 1
-	// 	}
-	// });
-	return venuesHandle
+	return Venues.find(
+		{event_id: Session.get('eventId')},
+		{sort: {
+				score: -1,
+				name: 1
+		}}
+	);
+	//return venuesHandle;
 };
 
 Template.venue.selected = function() {
@@ -56,17 +60,33 @@ Template.venue.events = {
 	'click': function() {
 		Session.set("selected_venue", this._id);
 	},
-	'click img': function() {
-		Meteor.call('removeVenue', this._id);
+	'click div.delete': function() {
+		Venues.remove(this._id);
 	}
 };
 
 Template.header.events = {
 	'click a.inc': function() {
-		Meteor.call('incrementVenue', Session.get("selected_venue"));
+		var v = Venues.findOne(Session.get("selected_venue")); 
+		
+		if (v){
+			Venues.update(v._id, {
+				$inc: {
+					score: 1
+				}
+			});
+		}
 	},
 	'click a.dec': function() {
-		Meteor.call('decrementVenue', Session.get("selected_venue"));
+		var v = Venues.findOne(Session.get("selected_venue")); 
+		
+		if (v && v.score > 0){
+			Venues.update(v._id, {
+				$inc: {
+					score: -1
+				}
+			});
+		}
 	}	
 };
 
@@ -84,15 +104,16 @@ Template.searchResult.events = {
 		}
 	},
 	'click td.add': function(event, template) {
-	 	v = Venues.findOne({name: this.name});
+	 	v = Venues.findOne({event_id: Session.get('eventId'), name: this.name});
 		if (!v){
-			Meteor.call('createVenue', 
-			{
-				name: this.name,
-				score: 0
-			});			
+			Venues.insert(
+				{
+					event_id: Session.get('eventId'), 
+					name: this.name,
+					score: 0
+				}
+			);	
 		}		
-
 	}	
 };
 
@@ -294,7 +315,7 @@ var EventRouter = Backbone.Router.extend({
 	}
 });
 
-Router = new ListRouter;
+Router = new EventRouter;
 
 Meteor.startup(function () {		
 	Backbone.history.start({pushState: true});		
