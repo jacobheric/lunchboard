@@ -6,4 +6,5 @@
 appcache
 accounts-ui
 accounts-password
+backbone
 preserve-inputs

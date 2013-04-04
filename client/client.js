@@ -1,12 +1,34 @@
 //
-//Subscriptions
-Meteor.subscribe("venues");
-
-//
 //Local collections
 searchResults = new Meteor.Collection(null);
 // TODO: Map markers in meteor collection aren't working properly; revisit
 //mapMarkers = new Meteor.Collection();
+
+//
+//Subscriptions
+Meteor.subscribe("events");
+
+// Subscribe to 'events' collection on startup.
+var eventsHandle = Meteor.subscribe('events', function () {
+
+	if (Session.get('eventId')){
+		var e = Events.findOne(Session.get('eventId'));
+	}
+	else {
+		var id = Events.insert({});
+		Session.set('eventId', id);
+		Router.setList(id);
+	}
+});
+
+Deps.autorun(function () {
+	
+	var	thingsHandle = null;
+	
+	if (Session.get('eventId')) {
+		venuesHandle = Meteor.subscribe('venues', Session.get('eventId'));
+	}
+});
 
 //
 //Pure clientside code; does non-reactive restaurant search
@@ -16,19 +38,14 @@ var searchTimeout;
 var centerMarker;
 var curPos;
 
-Meteor.startup(function () {
-  Deps.autorun(function () {
-		//initialize();
-  });
-});
-
 Template.lunchboard.venues = function() {
-	return Venues.find({},{
-		sort: {
-			score: -1,
-			name: 1
-		}
-	});
+	// return Venues.find({},{
+	// 	sort: {
+	// 		score: -1,
+	// 		name: 1
+	// 	}
+	// });
+	return venuesHandle
 };
 
 Template.venue.selected = function() {
@@ -261,3 +278,24 @@ function showInfoWindow(i) {
 		
 	}
 }
+
+var EventRouter = Backbone.Router.extend({
+	routes: {
+		":eventId": "main"
+	},
+	main: function(eventId) {
+		var oldEventId = Session.get("eventId");
+		if (oldEventId !== eventId) {
+			Session.set("eventId", eventId);
+		}
+	},
+	setEvent: function(eventId) {
+		this.navigate(eventId, true);
+	}
+});
+
+Router = new ListRouter;
+
+Meteor.startup(function () {		
+	Backbone.history.start({pushState: true});		
+});

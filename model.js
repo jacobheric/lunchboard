@@ -6,7 +6,19 @@ Events = new Meteor.Collection("events");
 
 Venues.allow({
   insert: function () {
-    return true; // use createVenue function only
+    return true; 
+  },
+  update: function () {
+    return true;
+  },
+  remove: function () {
+	return true;
+  }
+});
+
+Events.allow({
+  insert: function () {
+    return true; 
   },
   update: function () {
     return true;
@@ -17,6 +29,9 @@ Venues.allow({
 });
 
 
+
+//
+//Revisit later
 Meteor.methods({
 	
 	//
