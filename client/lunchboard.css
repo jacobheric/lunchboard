@@ -67,7 +67,7 @@ a:hover {
 .venue .name {
 	display: inline-block;
 	width: 300px;
-	font-size: 1.75em;
+	font-size: 1.5em;
 	border-style: none none none dashed;
 	border-color: #ccc;
 	border-width: 2px;	
@@ -78,7 +78,7 @@ a:hover {
 	display: inline-block;
 	width: 100px;
 	text-align: right;
-	font-size: 2em;
+	font-size: 1.5em;
 	font-weight: bold;
 	color: #777;
 }
@@ -102,7 +102,7 @@ a:hover {
 
 .delete {
 	display: inline-block;
-	font-size: 2.5em;
+	font-size: 2em;
 }
 
 .delete a {
@@ -119,7 +119,7 @@ a:hover {
 
 .title {
 	font-weight: bold;
-	font-size: 1.2em;
+	font-size: 1em;
 }
 
 .instruction {

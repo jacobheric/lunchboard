@@ -216,6 +216,7 @@ function doSearch() {
 				
 				if (addVenues && i < 5){
 					Venues.insert({
+							event_id: Session.get('eventId'),
 							name: results[i].name,
 							score: 0
 						});
