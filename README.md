@@ -9,5 +9,5 @@ The map/places widget is unique per client.  The restaurant vote/roster board is
 
 The app was really created to exercise meteor.  At this point it's basic.
 
-Visit [http://lunchboard.jacobheric.com](http://lunchboard.jacobheric.com "Lunchboard")., the app will redirect you to a unique event url that you can share.
+Visit [http://lunchboard.jacobheric.com](http://lunchboard.jacobheric.com "Lunchboard"), the app will redirect you to a unique event url that you can share.
 
